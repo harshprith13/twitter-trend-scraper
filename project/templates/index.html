@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Trend Scraper</title>
+</head>
+<body>
+    <h1>Twitter Trend Scraper</h1>
+    <button onclick="runScript()">Click here to run the script</button>
+
+    <div id="result" style="margin-top: 20px;">
+        <!-- The result will be displayed here -->
+    </div>
+
+    <script>
+        function runScript() {
+            fetch('/run-script', {
+                method: 'POST',  // Use POST instead of GET
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `
+                    <p>These are the most happening topics as on ${data.timestamp}:</p>
+                    <ul>
+                        <li>${data.trend1}</li>
+                        <li>${data.trend2}</li>
+                        <li>${data.trend3}</li>
+                        <li>${data.trend4}</li>
+                        <li>${data.trend5}</li>
+                    </ul>
+                    <p>The IP address used for this query was ${data.ip_address}.</p>
+                    <p>Here’s a JSON extract of this record from MongoDB:</p>
+                    <pre>${JSON.stringify(data.record, null, 4)}</pre>
+                    <button onclick="runScript()">Click here to run the query again</button>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = `<p>Error: ${error}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
